@@ -9,10 +9,8 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
-
     unset($_SESSION['msg']);
 
-// ///
 if(isset( $_GET['id'])){
    
    $stmt = $pdo->prepare("SELECT *FROM website WHERE id = :id ");
@@ -25,7 +23,7 @@ if(isset( $_GET['id'])){
     header('Location:edit.php?id='.$_GET['id']);
    
 }
-    $message = $data['message'];
+    
     $name = $data['name'];
     $url = $data['url'];
     $password = $data['password'];
@@ -60,7 +58,7 @@ if(isset( $_GET['id'])){
             <div class="container">
                 <div class="heading">
                     <h2>&nbsp;Account</h2>
-                    <h2 style="color:red;"><?php echo $message;?></h2>
+                    
                 </div>
                 <form action="submit2.php?id=<?php echo $_GET['id'];?>" method="post" style="width: 493px;">
                     <div class="mb-3"><label class="form-label text-muted" for="name" style="text-align: right;">Website

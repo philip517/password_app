@@ -10,17 +10,12 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// if(isset($_SESSION['msg'])){
-//     echo '<h1>'.$_SESSION['msg'].'</h1>';
-//     unset($_SESSION['msg']);
-// }
-///
 if(isset( $_SESSION['exists'])){
     $data = $_SESSION['exists'];
     $message = $data['message'];
     $name = $data['name'];
     $url = $data['url'];
-    $password = $data['password'];
+    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
     $description = $data['description'];
 
 }else{

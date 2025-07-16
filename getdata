@@ -1,0 +1,21 @@
+<?php
+$sql = "SELECT id, name, email FROM users";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+
+// Fetch all results into an associative array
+$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<?php if (empty($data)): ?>
+<p>No records found.</p>
+<?php else: ?>
+
+
+<?php foreach($data as $user): ?>
+<tr>
+    <td><?php echo $user['id']; ?></td>
+    <td><?php echo $user['name']; ?></td>
+    <td><?php echo $user['email']; ?></td>
+</tr>
+<?php  endforeach; ?>

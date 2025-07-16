@@ -1,0 +1,16 @@
+This is a simple password archiving app that i made to help me manage passwords of my many accounts on various websites, Although it may be counter intuitive and honestly a bit of a security risk if the web app or its data is accessed by wrong individuals , it was my intention to build an app that seemed useful to the common man and also in orderto test my skills of web design.
+
+In the creation of this app i utilized Bootstrap studio for the UI and some hand plain PHP,Javascript , As well as the Incoperation of ChatGPT.
+
+--------------------NOTES--------------------
+
+1. Before using this app kindly install XAMPP or any database management software that surpports Mysql databases .
+2. Create a user named testUser and the password test1234
+3. Create a database named userData
+4. Import the Database file found in the config/ folder ,
+5. copy the HALLO-APP folder into your localhost directory
+
+on windows this will be in somewhere in C:XAMPP/htdocs/
+on linux (i am currently using Ubuntu 22.04.5 LTS ) somewhere in /opt/lampp/htdocs/
+
+6. The default user for the app is user1 and the password is test1234

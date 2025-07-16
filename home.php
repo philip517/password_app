@@ -73,6 +73,15 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <?php ?>
     <main class="page projets-page">
+        <div class="d-flex justify-content-end" style="margin-top: 15px; margin-right: 20px;">
+    <a class="btn btn-primary text-capitalize fw-semibold text-bg-danger" 
+       href="logout.php" 
+       data-bss-disabled-mobile="true" 
+       data-bss-hover-animate="pulse" 
+       style="border-radius: 5px; border-style: none;">
+        Logout
+    </a>
+</div>
         <section class="portfolio-block project-no-images" style="padding-top: 35px">
             <div class="container" style="background: var(--bs-btn-disabled-color)">
 
@@ -149,37 +158,39 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <div class="heading" style="text-align: right ;margin-top:100px;">
                     <form method="post" class="d-flex justify-content-center align-items-center pulse animated">
-                        <h2 class="d-lg-flex justify-content-lg-center align-items-lg-center"
-                            style="text-align: center; height: 43px">
-                            <input class="form-control" name="search" type="text" style="
-                    padding-top: 0px;
-                    padding-bottom: 0px;
-                    width: 309.6px;
-                    height: 39px;
-                    margin-right: -2px;
-                    padding-left: 21px;
-                    border-top-right-radius: 0px;
-                    border-bottom-right-radius: 0px;
-                  " placeholder="search name" /><input
-                                class="btn btn-primary text-capitalize fw-semibold text-bg-secondary" style="
-                    border-radius: 5px;
-                    padding-left: 0px;
-                    height: 39px;
-                    padding-top: 0px;
-                    margin-top: 0px;
-                    padding-right: 0px;
-                    margin-right: 0px;
-                    margin-left: 0px;
-                    padding-bottom: 0px;
-                    margin-bottom: 0px;
-                    width: 91.4px;
-                    background: #2d338e;
-                    border-top-left-radius: 0px;
-                    border-bottom-left-radius: 0px;
-                    border-style: none;
-                  " type="submit" value="Search">
-                        </h2>
-                    </form>
+  <div class="position-relative" style="width: 309.6px;">
+    <input class="form-control" autocomplete="off" id="searchInput" name="search" type="text" 
+      style="height: 39px; border-radius: 5px 5px 0 0;" placeholder="Search name" />
+    
+    <div id="searchSuggestions" class="list-group"
+      style="
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        border: 1px solid #ced4da;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        background-color: #fff;
+        display: none;
+        max-height: 200px;
+        overflow-y: auto;
+      ">
+    </div>
+  </div>
+
+  <input class="btn btn-primary text-capitalize fw-semibold text-bg-secondary"
+    style="
+      margin-left: 10px;
+      height: 39px;
+      border-radius: 5px;
+      background: #2d338e;
+      border-style: none;
+    "
+    type="submit" value="Search" />
+</form>
+
                     <h2 style="padding-top: 0px; margin-top: 39px">
                         <a class="btn btn-primary text-capitalize fw-semibold text-bg-success" role="button"
                             data-bss-disabled-mobile="true" data-bss-hover-animate="pulse"
@@ -249,23 +260,66 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $('#modal-1').modal('hide');
     </script>
     <?php endif;?>
+<?php
+// code to open congrats modal if msg is set 
+if(isset($_SESSION['msg'])): ?>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#modal-9').modal('show');
+});
+</script>
+<?php 
+unset($_SESSION['msg']); // ✅ Clear it after showing
+else: ?>
+<script type="text/javascript">
+$('#modal-9').modal('hide');
+</script>
+<?php endif; ?>
 
-    <?php
-    //code to open congrats modal if processeddata is set 
-    if(isset($_SESSION['msg'])):?>
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('#modal-9').modal('show');
-        alert
+<script>
+$(document).ready(function() {
+    $('#searchInput').on('input', function() {
+        const query = $(this).val();
+
+        if (query.length >= 1) {
+            $.ajax({
+                url: 'search_suggest.php',
+                type: 'GET',
+                data: { term: query },
+                success: function(data) {
+                    const suggestions = JSON.parse(data);
+                    let suggestionHtml = '';
+                    if (suggestions.length > 0) {
+                        suggestions.forEach(item => {
+                            suggestionHtml += '<a href="#" class="list-group-item list-group-item-action suggestion-item">' + item + '</a>';
+                        });
+                    }
+                    $('#searchSuggestions').html(suggestionHtml).show();
+                }
+            });
+        } else {
+            $('#searchSuggestions').hide();
+        }
     });
-    </script>
 
-    <?php else: ?>
-    <script type="text/javascript">
-    $('#modal-9').modal('hide');
-    </script>
-    <?php endif;?>
+    // Handle click on suggestion
+    $(document).on('click', '.suggestion-item', function(e) {
+        e.preventDefault();
+        const selected = $(this).text();
+        $('#searchInput').val(selected);
+        $('#searchSuggestions').hide();
+    });
+
+    // Hide suggestions when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#searchInput').length) {
+            $('#searchSuggestions').hide();
+        }
+    });
+});
+</script>
 
 </body>
+
 
 </html>
